@@ -28,34 +28,27 @@
         collector.set_book_genre('Звездные войны', 'Фантастика')
 
         assert collector.get_book_genre('Звездные войны') == 'Фантастика'
-4.Тест с параметризацией проверяет, что нельзя получить пустой список или жанр невалидный. 
+4.Тест проверяет, что получен список книг с определенным жанром(Комедии). 
 
-    @pytest.mark.parametrize(
-        'name, genre',
-        [
-            ['', 'Фантастика'],
-            ['9 рота', 'Боевик']
-        ]
-    )
-    def test_get_books_with_specific_genre_empty_list_book_genre_false(self, collector, name, genre):
-        collector.add_new_book(name)
+    def test_get_books_with_specific_genre_get_books_genre_comedy(self, collector):
+        collector.books_genre = {'Джентельмены': 'Комедии', 'Остров проклятых': 'Детективы',
+                                 'Час пик': 'Комедии',
+                                 'Тачки': 'Мультфильмы'}
+        assert len(collector.get_books_with_specific_genre('Комедии')) == 2
+5.Тест проверяет, что словарь получен корректно.
 
-        assert not collector.get_books_with_specific_genre('Мультфильм')
-5.Тест проверяет, что нельзя получить пустой словарь.
+    def test_get_books_genre_correct(self, collector):
+        collector.add_new_book('Звездные войны')
+        collector.set_book_genre('Звездные войны', 'Фантастика')
 
-    def test_get_books_genre_dict_empty(self, collector):
-        assert not collector.get_books_genre()
-6.Тест проверяет, что книги с рейтингом жанра 18+ не попадают в список книг для детей.
+        assert collector.get_books_genre() == collector.books_genre
+6.Тест проверяет, что получены книги подходящие детям.
 
-    def test_books_for_children_not_adult_book(self, collector):
-        children_books = ['Старик Хоттабыч', 'Дядя Фёдор, пёс и кот']
-        x = 0
-        for name in children_books:
-            collector.add_new_book(name)
-            collector.set_book_genre(name, collector.genre_age_rating[x])
-            x += 1
-
-        assert not collector.get_books_for_children()
+    def test_get_books_for_children_get_children_books(self, collector):
+        collector.books_genre = {'Оно': 'Ужасы', 'Остров проклятых': 'Детективы',
+                                 'Час пик': 'Комедии',
+                                 'Тачки': 'Мультфильмы'}
+        assert len(collector.get_books_for_children()) == 2
 7.Тест проверяет, что книга добавленная в избранное есть в избранном.
 
     def test_add_book_in_favorites_book_in_favorites(self, collector):
